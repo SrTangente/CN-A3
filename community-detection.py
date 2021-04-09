@@ -8,14 +8,17 @@ import networkx.algorithms.community as community
 def get_label_partition(net):
     label_com_generator = community.label_propagation_communities(net)
     partition = {}
-    next_label_com = label_com_generator.__next__()
-    i = 0
-    while next_label_com:
-        for v in next_label_com:
-            partition[v] = i
-        i = i+1
+    try:
         next_label_com = label_com_generator.__next__()
-    return partition
+        i = 0
+        while next_label_com:
+            for v in next_label_com:
+                partition[v] = i
+            i = i+1
+            next_label_com = label_com_generator.__next__()
+    except StopIteration:
+        return partition
+
 
 def get_modularity_partitions(net):
     partition = {}
@@ -23,8 +26,7 @@ def get_modularity_partitions(net):
     for i in range(len(mod_com)):
         com = list(mod_com[i])
         for v in com:
-            node = int(v)
-            partition[node] = i
+            partition[v] = i
     return partition
 
 
@@ -118,31 +120,17 @@ def _position_nodes(g, partition, **kwargs):
 
     return pos
 
-folders = ['toy', 'real', 'model']
+folders = ['toy', 'model', 'real']
 
 for f in folders:
     graphs = os.listdir(f)
     for g in graphs:
         path = './'+f+'/'+g
         if(path.endswith("net")):
-            print(path)
             net = nx.Graph(nx.read_pajek(path))
             mod_partition = get_modularity_partitions(net)
-
             label_partition = get_label_partition(net)
-            positions = {}
-            coordinates = []
-            '''try:
-                print(net.nodes)
-                node_list = list(net.nodes)
-                coordinates = [(n[1], n[2]) for n in node_list]
-                for i in range(0, len(net.nodes)):
-                    v = node_list[i]
-                    positions[v] = coordinates[i]
-            except IndexError:
-                coordinates = None'''
-            if len(coordinates) > 0:
-                nx.drawing.draw(net, positions)
-            else:
-                nx.draw_kamada_kawai(net)
+            fig, axes = plt.subplots(1, 2)
+            nx.draw_kamada_kawai(net, node_color=list(mod_partition.values()), ax=axes[0])
+            nx.draw_kamada_kawai(net, node_color=list(label_partition.values()), ax=axes[1])
             plt.show()
