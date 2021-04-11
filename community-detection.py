@@ -1,8 +1,11 @@
 import os
+from collections import defaultdict
+from clu_utils import *
 import networkx as nx
 import numpy as np
 import matplotlib.pyplot as plt
 import networkx.algorithms.community as community
+from net_drawing import network_plot_3D
 
 
 def get_label_partition(net):
@@ -14,7 +17,7 @@ def get_label_partition(net):
         while next_label_com:
             for v in next_label_com:
                 partition[v] = i
-            i = i+1
+            i = i + 1
             next_label_com = label_com_generator.__next__()
     except StopIteration:
         return partition
@@ -30,107 +33,96 @@ def get_modularity_partitions(net):
     return partition
 
 
-def community_layout(g, partition):
-    """
-    Compute the layout for a modular graph.
+def partition_to_clu(partition: dict):
+    clu = []
+    for v in partition.values():
+        clu.append([])
+    for k in partition.keys():
+        clu[partition[k]].append(k)
+    return clu
+
+def clu_to_partition(clu):
+    dict = {}
+    for i in range(len(clu)):
+        for k in clu[i]:
+            dict[k] = i
+    return dict
 
 
-    Arguments:
-    ----------
-    g -- networkx.Graph or networkx.DiGraph instance
-        graph to plot
+def parse_pajek_clu(lines):
+    if isinstance(lines, str):
+        lines = iter(lines.split('\n'))
+    lines = iter([line.rstrip('\n') for line in lines])
 
-    partition -- dict mapping int node -> int community
-        graph partitions
-
-
-    Returns:
-    --------
-    pos -- dict mapping int node -> (float x, float y)
-        node positions
-
-    """
-
-    pos_communities = _position_communities(g, partition, scale=3.)
-
-    pos_nodes = _position_nodes(g, partition, scale=1.)
-
-    # combine positions
-    pos = dict()
-    for node in g.nodes():
-        pos[node] = pos_communities[node] + pos_nodes[node]
-
-    return pos
-
-def _position_communities(g, partition, **kwargs):
-
-    # create a weighted graph, in which each node corresponds to a community,
-    # and each edge weight to the number of edges between communities
-    between_community_edges = _find_between_community_edges(g, partition)
-
-    communities = set(partition.values())
-    hypergraph = nx.DiGraph()
-    hypergraph.add_nodes_from(communities)
-    for (ci, cj), edges in between_community_edges.items():
-        hypergraph.add_edge(ci, cj, weight=len(edges))
-
-    # find layout for communities
-    pos_communities = nx.spring_layout(hypergraph, **kwargs)
-
-    # set node positions to position of community
-    pos = dict()
-    for node, community in partition.items():
-        pos[node] = pos_communities[community]
-
-    return pos
-
-def _find_between_community_edges(g, partition):
-
-    edges = dict()
-
-    for (ni, nj) in g.edges():
-        ci = partition[ni]
-        cj = partition[nj]
-
-        if ci != cj:
-            try:
-                edges[(ci, cj)] += [(ni, nj)]
-            except KeyError:
-                edges[(ci, cj)] = [(ni, nj)]
-
-    return edges
-
-def _position_nodes(g, partition, **kwargs):
-    """
-    Positions nodes within communities.
-    """
-
-    communities = dict()
-    for node, community in partition.items():
+    labels = []  # in the order of the file, needed for matrix
+    while lines:
         try:
-            communities[community] += [node]
-        except KeyError:
-            communities[community] = [node]
+            l = next(lines)
+        except:  # EOF
+            break
+        if l.lower().startswith("*vertices"):
+            l, nnodes = l.split()
+            communities = defaultdict(list)
+            for vertice in range(int(nnodes)):
+                l = next(lines)
+                community = int(l)
+                communities.setdefault(community, []).append(vertice)
+        else:
+            break
 
-    pos = dict()
-    for ci, nodes in communities.items():
-        subgraph = g.subgraph(nodes)
-        pos_subgraph = nx.spring_layout(subgraph, **kwargs)
-        pos.update(pos_subgraph)
+    return [v for k, v in dict(communities).items()]
 
-    return pos
 
-folders = ['toy', 'model', 'real']
+folders = ['toy', 'real', 'model']
 
 for f in folders:
     graphs = os.listdir(f)
-    for g in graphs:
-        path = './'+f+'/'+g
-        if(path.endswith("net")):
+    for g in sorted(graphs, reverse=True):
+        path = './' + f + '/' + g
+        if (path.endswith("net")):
             net = nx.Graph(nx.read_pajek(path))
+            coordinates = None
+
+            #extract coordinates
+            file = open(path, 'r')
+            lines = file.read().split('\n')
+            if len(lines[1].split(' ')) > 3:
+                coordinates = {}
+                for l in lines[1:]:
+                    if l.__contains__('*Edges'):
+                        break
+                    splitted_line = l.split()
+                    index = int(splitted_line[0])
+                    name = splitted_line[1].replace('"', '')
+                    cs = [float(c) for c in splitted_line[2:]]
+                    coord = (cs[0], cs[1])
+                    coordinates[name] = coord
+
+            #generate community partitions
             mod_partition = get_modularity_partitions(net)
             label_partition = get_label_partition(net)
-            fig, axes = plt.subplots(1, 2)
-            nx.draw_kamada_kawai(net, node_color=list(mod_partition.values()), ax=axes[0])
-            nx.draw_kamada_kawai(net, node_color=list(label_partition.values()), ax=axes[1])
+            fig, axes = plt.subplots(1, 3)
+
+            try:
+                clu = read_pajek_communities(path.replace('net', 'clu'))
+                clu_partition = clu_to_partition(clu)
+            except FileNotFoundError:
+                clu = None
+                fig, axes = plt.subplots(1, 2)
+
+            if coordinates is not None:
+                nx.set_node_attributes(net, coordinates, 'coord')
+                nx.draw(net, pos=coordinates, node_color=list(mod_partition.values()), ax=axes[0])
+                nx.draw(net, pos=coordinates, node_color=list(label_partition.values()), ax=axes[1])
+                if clu is not None:
+                    nx.draw(net, pos=coordinates, node_color=list(clu_partition.values()), ax=axes[2])
+            else:
+                nx.draw_kamada_kawai(net, node_color=list(mod_partition.values()), ax=axes[0])
+                nx.draw_kamada_kawai(net, node_color=list(label_partition.values()), ax=axes[1])
+                if clu is not None:
+                    nx.draw_kamada_kawai(net, node_color=list(clu_partition.values()), ax=axes[2])
             plt.show()
+            write_pajek_communities(partition_to_clu(mod_partition), path[:-4] + '_modularity.clu')
+            write_pajek_communities(partition_to_clu(label_partition), path[:-4] + '_label.clu')
+        else:
+            print(read_pajek_communities(path))
