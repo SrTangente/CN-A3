@@ -1,0 +1,49 @@
+Partition1: rb125_label.clu
+Partition2: rb125.clu
+
+Number of Lists(1) : 17
+Number of Lists(2) : 5
+
+Same Class Agreements : 503
+Agreements            : 6220
+Disagreements(1)      : 533
+Disagreements(2)      : 997
+Disagreements         : 1530
+Pairs                 : 7750
+
+Jaccard Index         : 0.2474
+Rand Index            : 0.8026
+Adjusted Rand Index   : 0.2834
+Fowlkes Mallows Index : 0.4035
+Normalized Mutual Information Index (maximum)    : 0.4823
+Normalized Mutual Information Index (arithmetic) : 0.5847
+Normalized Mutual Information Index (geometric)  : 0.5983
+Normalized Mutual Information Index (minimum)    : 0.7424
+Asymmetric Wallace Index(1) : 0.4855
+Asymmetric Wallace Index(2) : 0.3353
+
+Mirkin Metric                   : 3060.0000
+Van Dongen Metric               : 94.0000
+Variation Of Information Metric : 2.4487
+Normalized Mirkin Metric                   : 0.1974
+Normalized Van Dongen Metric               : 0.3760
+Normalized Variation Of Information Metric : 0.3515
+
+Contingency table (Partition1 x Partition2):
+5	4	4	4	25
+5	0	0	0	0
+5	0	0	0	0
+5	0	0	0	0
+5	0	0	0	0
+0	6	0	0	0
+0	5	0	0	0
+0	5	0	0	0
+0	5	0	0	0
+0	0	6	0	0
+0	0	5	0	0
+0	0	5	0	0
+0	0	5	0	0
+0	0	0	6	0
+0	0	0	5	0
+0	0	0	5	0
+0	0	0	5	0

@@ -1,0 +1,44 @@
+Partition1: football.clu
+Partition2: football_modularity.clu
+
+Number of Lists(1) : 12
+Number of Lists(2) : 6
+
+Same Class Agreements : 84
+Agreements            : 5053
+Disagreements(1)      : 439
+Disagreements(2)      : 1063
+Disagreements         : 1502
+Pairs                 : 6555
+
+Jaccard Index         : 0.0530
+Rand Index            : 0.7709
+Adjusted Rand Index   : -0.0101
+Fowlkes Mallows Index : 0.1085
+Normalized Mutual Information Index (maximum)    : 0.1025
+Normalized Mutual Information Index (arithmetic) : 0.1199
+Normalized Mutual Information Index (geometric)  : 0.1217
+Normalized Mutual Information Index (minimum)    : 0.1445
+Asymmetric Wallace Index(1) : 0.1606
+Asymmetric Wallace Index(2) : 0.0732
+
+Mirkin Metric                   : 3004.0000
+Van Dongen Metric               : 171.0000
+Variation Of Information Metric : 5.3310
+Normalized Mirkin Metric                   : 0.2291
+Normalized Van Dongen Metric               : 0.7435
+Normalized Variation Of Information Metric : 0.7788
+
+Contingency table (Partition1 x Partition2):
+1	1	2	2	2	0
+1	1	3	3	0	1
+4	0	4	1	2	0
+3	1	1	3	2	2
+4	0	2	2	2	0
+1	0	2	1	3	0
+1	2	5	1	2	2
+0	2	2	3	4	1
+1	1	0	2	2	2
+2	3	3	2	0	0
+1	1	0	2	0	1
+2	1	3	1	2	1

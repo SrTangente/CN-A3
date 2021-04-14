@@ -1,0 +1,38 @@
+Partition1: grid-p-6x6_modularity.clu
+Partition2: grid-p-6x6_label.clu
+
+Number of Lists(1) : 6
+Number of Lists(2) : 4
+
+Same Class Agreements : 50
+Agreements            : 414
+Disagreements(1)      : 40
+Disagreements(2)      : 176
+Disagreements         : 216
+Pairs                 : 630
+
+Jaccard Index         : 0.1880
+Rand Index            : 0.6571
+Adjusted Rand Index   : 0.1409
+Fowlkes Mallows Index : 0.3506
+Normalized Mutual Information Index (maximum)    : 0.3066
+Normalized Mutual Information Index (arithmetic) : 0.3776
+Normalized Mutual Information Index (geometric)  : 0.3882
+Normalized Mutual Information Index (minimum)    : 0.4916
+Asymmetric Wallace Index(1) : 0.5556
+Asymmetric Wallace Index(2) : 0.2212
+
+Mirkin Metric                   : 432.0000
+Van Dongen Metric               : 36.0000
+Variation Of Information Metric : 2.6122
+Normalized Mirkin Metric                   : 0.3429
+Normalized Van Dongen Metric               : 0.5000
+Normalized Variation Of Information Metric : 0.5053
+
+Contingency table (Partition1 x Partition2):
+2	3	0	1
+0	3	3	0
+0	0	6	0
+2	3	0	1
+0	3	3	0
+0	0	6	0

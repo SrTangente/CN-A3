@@ -1,0 +1,34 @@
+Partition1: graph4+4_label.clu
+Partition2: graph4+4.clu
+
+Number of Lists(1) : 2
+Number of Lists(2) : 2
+
+Same Class Agreements : 12
+Agreements            : 28
+Disagreements(1)      : 0       (Partition1 inside Partition2)
+Disagreements(2)      : 0       (Partition2 inside Partition1)
+Disagreements         : 0       (Partition1 = Partition2)
+Pairs                 : 28
+
+Jaccard Index         : 1.0000
+Rand Index            : 1.0000
+Adjusted Rand Index   : 1.0000
+Fowlkes Mallows Index : 1.0000
+Normalized Mutual Information Index (maximum)    : 1.0000
+Normalized Mutual Information Index (arithmetic) : 1.0000
+Normalized Mutual Information Index (geometric)  : 1.0000
+Normalized Mutual Information Index (minimum)    : 1.0000
+Asymmetric Wallace Index(1) : 1.0000       (Partition1 inside Partition2)
+Asymmetric Wallace Index(2) : 1.0000       (Partition2 inside Partition1)
+
+Mirkin Metric                   : 0.0000
+Van Dongen Metric               : 0.0000
+Variation Of Information Metric : 0.0000
+Normalized Mirkin Metric                   : 0.0000
+Normalized Van Dongen Metric               : 0.0000
+Normalized Variation Of Information Metric : 0.0000
+
+Contingency table (Partition1 x Partition2):
+4	0
+0	4

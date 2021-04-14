@@ -1,0 +1,35 @@
+Partition1: 20x2+5x2_modularity.clu
+Partition2: 20x2+5x2.clu
+
+Number of Lists(1) : 3
+Number of Lists(2) : 4
+
+Same Class Agreements : 250
+Agreements            : 900
+Disagreements(1)      : 175
+Disagreements(2)      : 150
+Disagreements         : 325
+Pairs                 : 1225
+
+Jaccard Index         : 0.4348
+Rand Index            : 0.7347
+Adjusted Rand Index   : 0.4063
+Fowlkes Mallows Index : 0.6063
+Normalized Mutual Information Index (maximum)    : 0.5069
+Normalized Mutual Information Index (arithmetic) : 0.5382
+Normalized Mutual Information Index (geometric)  : 0.5392
+Normalized Mutual Information Index (minimum)    : 0.5736
+Asymmetric Wallace Index(1) : 0.5882
+Asymmetric Wallace Index(2) : 0.6250
+
+Mirkin Metric                   : 650.0000
+Van Dongen Metric               : 25.0000
+Variation Of Information Metric : 1.4980
+Normalized Mirkin Metric                   : 0.2653
+Normalized Van Dongen Metric               : 0.2500
+Normalized Variation Of Information Metric : 0.2654
+
+Contingency table (Partition1 x Partition2):
+5	0	0	5
+15	5	0	0
+0	15	5	0

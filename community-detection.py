@@ -6,6 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import networkx.algorithms.community as community
 from net_drawing import network_plot_3D
+from sklearn.metrics import jaccard_score, normalized_mutual_info_score
 
 
 def get_label_partition(net):
@@ -73,7 +74,7 @@ def parse_pajek_clu(lines):
     return [v for k, v in dict(communities).items()]
 
 
-folders = ['toy', 'real', 'model']
+folders = ['toy', 'model', 'real']
 
 for f in folders:
     graphs = os.listdir(f)
@@ -102,6 +103,8 @@ for f in folders:
             mod_partition = get_modularity_partitions(net)
             label_partition = get_label_partition(net)
             fig, axes = plt.subplots(1, 3)
+            axes[2].set_title('Reference partition')
+            axes[2].invert_yaxis()
 
             try:
                 clu = read_pajek_communities(path.replace('net', 'clu'))
@@ -110,19 +113,23 @@ for f in folders:
                 clu = None
                 fig, axes = plt.subplots(1, 2)
 
+            axes[0].set_title('Modularity partition')
+            axes[1].set_title('Label partition')
+            axes[0].invert_yaxis()
+            axes[1].invert_yaxis()
+
             if coordinates is not None:
                 nx.set_node_attributes(net, coordinates, 'coord')
-                nx.draw(net, pos=coordinates, node_color=list(mod_partition.values()), ax=axes[0])
-                nx.draw(net, pos=coordinates, node_color=list(label_partition.values()), ax=axes[1])
+                nx.draw(net, pos=coordinates, node_color=list(mod_partition.values()), ax=axes[0], node_size=100)
+                nx.draw(net, pos=coordinates, node_color=list(label_partition.values()), ax=axes[1], node_size=100)
                 if clu is not None:
-                    nx.draw(net, pos=coordinates, node_color=list(clu_partition.values()), ax=axes[2])
+                    nx.draw(net, pos=coordinates, node_color=list(clu_partition.values()), ax=axes[2], node_size=100)
             else:
-                nx.draw_kamada_kawai(net, node_color=list(mod_partition.values()), ax=axes[0])
-                nx.draw_kamada_kawai(net, node_color=list(label_partition.values()), ax=axes[1])
+                nx.draw_kamada_kawai(net, node_color=list(mod_partition.values()), ax=axes[0], node_size=100)
+                nx.draw_kamada_kawai(net, node_color=list(label_partition.values()), ax=axes[1], node_size=100)
                 if clu is not None:
-                    nx.draw_kamada_kawai(net, node_color=list(clu_partition.values()), ax=axes[2])
+                    nx.draw_kamada_kawai(net, node_color=list(clu_partition.values()), ax=axes[2], node_size=100)
             plt.show()
+
             write_pajek_communities(partition_to_clu(mod_partition), path[:-4] + '_modularity.clu')
             write_pajek_communities(partition_to_clu(label_partition), path[:-4] + '_label.clu')
-        else:
-            print(read_pajek_communities(path))

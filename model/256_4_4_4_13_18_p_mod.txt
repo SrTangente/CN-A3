@@ -1,0 +1,36 @@
+Partition1: 256_4_4_4_13_18_p.clu
+Partition2: 256_4_4_4_13_18_p_modularity.clu
+
+Number of Lists(1) : 4
+Number of Lists(2) : 4
+
+Same Class Agreements : 3798
+Agreements            : 24108
+Disagreements(1)      : 4266
+Disagreements(2)      : 4266
+Disagreements         : 8532
+Pairs                 : 32640
+
+Jaccard Index         : 0.3080
+Rand Index            : 0.7386
+Adjusted Rand Index   : 0.2974
+Fowlkes Mallows Index : 0.4710
+Normalized Mutual Information Index (maximum)    : 0.4240
+Normalized Mutual Information Index (arithmetic) : 0.4240
+Normalized Mutual Information Index (geometric)  : 0.4240
+Normalized Mutual Information Index (minimum)    : 0.4240
+Asymmetric Wallace Index(1) : 0.4710
+Asymmetric Wallace Index(2) : 0.4710
+
+Mirkin Metric                   : 17064.0000
+Van Dongen Metric               : 226.0000
+Variation Of Information Metric : 2.3041
+Normalized Mirkin Metric                   : 0.2614
+Normalized Van Dongen Metric               : 0.4414
+Normalized Variation Of Information Metric : 0.2880
+
+Contingency table (Partition1 x Partition2):
+6	30	28	0
+7	0	36	21
+21	0	0	43
+30	34	0	0

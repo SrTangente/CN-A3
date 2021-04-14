@@ -1,0 +1,34 @@
+Partition1: graph3+1+3_modularity.clu
+Partition2: graph3+1+3.clu
+
+Number of Lists(1) : 2
+Number of Lists(2) : 3
+
+Same Class Agreements : 6
+Agreements            : 18
+Disagreements(1)      : 3
+Disagreements(2)      : 0       (Partition2 inside Partition1)
+Disagreements         : 3
+Pairs                 : 21
+
+Jaccard Index         : 0.6667
+Rand Index            : 0.8571
+Adjusted Rand Index   : 0.6957
+Fowlkes Mallows Index : 0.8165
+Normalized Mutual Information Index (maximum)    : 0.6800
+Normalized Mutual Information Index (arithmetic) : 0.8095
+Normalized Mutual Information Index (geometric)  : 0.8246
+Normalized Mutual Information Index (minimum)    : 1.0000
+Asymmetric Wallace Index(1) : 0.6667
+Asymmetric Wallace Index(2) : 1.0000       (Partition2 inside Partition1)
+
+Mirkin Metric                   : 6.0000
+Van Dongen Metric               : 1.0000
+Variation Of Information Metric : 0.4636
+Normalized Mirkin Metric                   : 0.1429
+Normalized Van Dongen Metric               : 0.0714
+Normalized Variation Of Information Metric : 0.1651
+
+Contingency table (Partition1 x Partition2):
+3	1	0
+0	0	3
