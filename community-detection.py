@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import networkx.algorithms.community as community
 from net_drawing import network_plot_3D
 from sklearn.metrics import jaccard_score, normalized_mutual_info_score
-
+import igraph
 
 def get_label_partition(net):
     label_com_generator = community.label_propagation_communities(net)
@@ -23,6 +23,14 @@ def get_label_partition(net):
     except StopIteration:
         return partition
 
+def random_walk(net):
+    partition = {}
+
+    g = igraph.Graph.Adjacency((nx.to_numpy_matrix(net) > 0).tolist())
+    res = g.community_walktrap(steps=4)
+    values = res.as_clustering().membership
+    keys = list(net._adj.keys())
+    return dict(zip(keys,values))
 
 def get_modularity_partitions(net):
     partition = {}
@@ -102,34 +110,40 @@ for f in folders:
             #generate community partitions
             mod_partition = get_modularity_partitions(net)
             label_partition = get_label_partition(net)
-            fig, axes = plt.subplots(1, 3)
-            axes[2].set_title('Reference partition')
-            axes[2].invert_yaxis()
+            random_walk_partition = random_walk(net)
+            fig, axes = plt.subplots(1, 4)
+            fig.set_size_inches(18.5, 10.5)
+            axes[3].set_title('Reference partition')
+            axes[3].invert_yaxis()
 
             try:
                 clu = read_pajek_communities(path.replace('net', 'clu'))
                 clu_partition = clu_to_partition(clu)
             except FileNotFoundError:
                 clu = None
-                fig, axes = plt.subplots(1, 2)
+                fig, axes = plt.subplots(1, 3)
 
             axes[0].set_title('Modularity partition')
             axes[1].set_title('Label partition')
+            axes[2].set_title('Random walk partition')
             axes[0].invert_yaxis()
             axes[1].invert_yaxis()
-
+            axes[2].invert_yaxis()
             if coordinates is not None:
                 nx.set_node_attributes(net, coordinates, 'coord')
                 nx.draw(net, pos=coordinates, node_color=list(mod_partition.values()), ax=axes[0], node_size=100)
                 nx.draw(net, pos=coordinates, node_color=list(label_partition.values()), ax=axes[1], node_size=100)
+                nx.draw(net, pos=coordinates, node_color=list(random_walk_partition.values()), ax=axes[2], node_size=100)
                 if clu is not None:
-                    nx.draw(net, pos=coordinates, node_color=list(clu_partition.values()), ax=axes[2], node_size=100)
+                    nx.draw(net, pos=coordinates, node_color=list(clu_partition.values()), ax=axes[3], node_size=100)
             else:
                 nx.draw_kamada_kawai(net, node_color=list(mod_partition.values()), ax=axes[0], node_size=100)
                 nx.draw_kamada_kawai(net, node_color=list(label_partition.values()), ax=axes[1], node_size=100)
+                nx.draw_kamada_kawai(net, node_color=list(random_walk_partition.values()), ax=axes[2], node_size=100)
                 if clu is not None:
-                    nx.draw_kamada_kawai(net, node_color=list(clu_partition.values()), ax=axes[2], node_size=100)
+                    nx.draw_kamada_kawai(net, node_color=list(clu_partition.values()), ax=axes[3], node_size=100)
             plt.show()
 
             write_pajek_communities(partition_to_clu(mod_partition), path[:-4] + '_modularity.clu')
             write_pajek_communities(partition_to_clu(label_partition), path[:-4] + '_label.clu')
+            write_pajek_communities(partition_to_clu(random_walk_partition), path[:-4] + '_randam_walk.clu')
