@@ -11,6 +11,7 @@ import igraph
 
 def get_label_partition(net):
     label_com_generator = community.label_propagation_communities(net)
+    #print('Label mod: ' + str(community.modularity(net, label_com_generator)))
     partition = {}
     try:
         next_label_com = label_com_generator.__next__()
@@ -24,17 +25,17 @@ def get_label_partition(net):
         return partition
 
 def random_walk(net):
-    partition = {}
-
     g = igraph.Graph.Adjacency((nx.to_numpy_matrix(net) > 0).tolist())
     res = g.community_walktrap(steps=4)
     values = res.as_clustering().membership
     keys = list(net._adj.keys())
+    #print('Random walk mod: '+str(g.modularity(values)))
     return dict(zip(keys,values))
 
 def get_modularity_partitions(net):
     partition = {}
     mod_com = community.greedy_modularity_communities(net)
+    #print('Greedy mod: '+str(community.modularity(net, mod_com)))
     for i in range(len(mod_com)):
         com = list(mod_com[i])
         for v in com:
@@ -91,7 +92,7 @@ for f in folders:
         if (path.endswith("net")):
             net = nx.Graph(nx.read_pajek(path))
             coordinates = None
-
+            print('GRAPH: '+path.split('/')[-1])
             #extract coordinates
             file = open(path, 'r')
             lines = file.read().split('\n')
@@ -143,7 +144,7 @@ for f in folders:
                 if clu is not None:
                     nx.draw_kamada_kawai(net, node_color=list(clu_partition.values()), ax=axes[3], node_size=100)
             plt.show()
-
+            fig.savefig('./images/'+path.split('/')[-1][:-4]+'.png',dpi=100)
             write_pajek_communities(partition_to_clu(mod_partition), path[:-4] + '_modularity.clu')
             write_pajek_communities(partition_to_clu(label_partition), path[:-4] + '_label.clu')
             write_pajek_communities(partition_to_clu(random_walk_partition), path[:-4] + '_randam_walk.clu')
